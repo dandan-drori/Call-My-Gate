@@ -1,5 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
+import { makeCall } from './services/call.service';
 
 function App() {
   const box = [
@@ -8,11 +8,17 @@ function App() {
   ];
   let isInBox = false;
   
-  const successCallback = (res) => {
+  const successCallback = async (res) => {
     console.log('Location access granted', res);
     const updatedStatus = checkIsInBox({latitude: res.coords.latitude, longitude: res.coords.longitude});
     if (!isInBox && updatedStatus) {
       console.log('Calling gate');
+      try {
+        const response = await makeCall();
+        alert(response);
+      } catch (err) {
+        console.log('Error making call | App.js', err);
+      }
       isInBox = true;
     }
     if (isInBox && !updatedStatus) {
